@@ -5,7 +5,7 @@ async function convertCurrency() {
     const result = document.getElementById('result');
     const convertBtn = document.getElementById('convert-btn');
 
-    if (amount && fromCurrency && toCurrency) {
+    if (amount && fromCurrency && toCurrency && !isNaN(amount)) { // Validate if amount is a number
         try {
             const response = await fetch(`https://v6.exchangerate-api.com/v6/3ebe2ccf9eeea2aaef280201/latest/${fromCurrency}`);
             const data = await response.json();
@@ -19,10 +19,10 @@ async function convertCurrency() {
                 result.innerText = "Error: Unable to fetch exchange rates.";
             }
         } catch (error) {
-            result.innerText = "Error fetching exchange rates!";
+            result.innerText = "Error fetching exchange rates! Please try again later.";
         }
     } else {
-        result.innerHTML = ''; // Clear result if input is incomplete
+        result.innerHTML = ''; // Clear result if input is incomplete or invalid
         convertBtn.style.display = 'block'; // Ensure the convert button is visible
     }
 }
@@ -31,22 +31,22 @@ function swapCurrencies() {
     const fromCurrency = document.getElementById('from-currency');
     const toCurrency = document.getElementById('to-currency');
 
-    // Log swap operation to console for debugging
     console.log("Swapping currencies...");
     console.log(`From: ${fromCurrency.value}, To: ${toCurrency.value}`);
 
-    // Swap currency values
     const temp = fromCurrency.value;
     fromCurrency.value = toCurrency.value;
     toCurrency.value = temp;
+
+    // Reset result and show button again after swapping
+    document.getElementById('result').innerHTML = '';
+    document.getElementById('convert-btn').style.display = 'block'; 
 
     // Automatically convert after swap
     convertCurrency();
 }
 
-// Event listeners for input and currency change
 document.getElementById('amount').addEventListener('input', convertCurrency);
-
 document.getElementById('from-currency').addEventListener('change', () => {
     document.getElementById('convert-btn').style.display = 'block'; // Ensure button shows again
     document.getElementById('result').innerHTML = ''; // Clear result
