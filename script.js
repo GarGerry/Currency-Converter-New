@@ -16,7 +16,14 @@ async function convertCurrency() {
         try {
             // Menggunakan API key Anda
             const response = await fetch(`https://v6.exchangerate-api.com/v6/3ebe2ccf9eeea2aaef280201/latest/${fromCurrency}`);
+            
+            // Mengecek apakah respons API valid
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            
             const data = await response.json();
+            console.log("API Response:", data);  // Menambahkan log untuk memeriksa respon API
 
             if (data.result === "success") {
                 const rate = data.rates[toCurrency];
@@ -31,6 +38,7 @@ async function convertCurrency() {
                 result.innerText = "Error: Unable to fetch exchange rates.";
             }
         } catch (error) {
+            console.error("Error fetching exchange rates:", error); // Menambahkan log untuk menangkap error
             result.innerText = "Error fetching exchange rates!";
         }
     } else {
