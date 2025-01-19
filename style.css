@@ -25,7 +25,8 @@ body {
 }
 
 .navbar .logo img {
-    height: 40px;
+    height: auto;
+    width: 140px;
     object-fit: contain;
 }
 
