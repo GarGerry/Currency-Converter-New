@@ -14,6 +14,7 @@ async function convertCurrency() {
 
     if (fromCurrency && toCurrency) {
         try {
+            // Menggunakan API key Anda
             const response = await fetch(`https://v6.exchangerate-api.com/v6/3ebe2ccf9eeea2aaef280201/latest/${fromCurrency}`);
             const data = await response.json();
 
@@ -41,10 +42,6 @@ async function convertCurrency() {
 function swapCurrencies() {
     const fromCurrency = document.getElementById('from-currency');
     const toCurrency = document.getElementById('to-currency');
-
-    // Log swap operation to console for debugging
-    console.log("Swapping currencies...");
-    console.log(`From: ${fromCurrency.value}, To: ${toCurrency.value}`);
 
     // Swap currency values
     const temp = fromCurrency.value;
