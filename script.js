@@ -1,20 +1,31 @@
 async function convertCurrency() {
-    const amount = document.getElementById('amount').value;
+    const amount = parseFloat(document.getElementById('amount').value);
     const fromCurrency = document.getElementById('from-currency').value;
     const toCurrency = document.getElementById('to-currency').value;
     const result = document.getElementById('result');
     const convertBtn = document.getElementById('convert-btn');
 
-    if (amount && fromCurrency && toCurrency) {
+    // Mengecek apakah input amount valid
+    if (isNaN(amount) || amount <= 0) {
+        result.innerText = "Please enter a valid amount.";
+        convertBtn.style.display = 'block';
+        return; // Menghentikan proses jika input jumlah tidak valid
+    }
+
+    if (fromCurrency && toCurrency) {
         try {
             const response = await fetch(`https://v6.exchangerate-api.com/v6/3ebe2ccf9eeea2aaef280201/latest/${fromCurrency}`);
             const data = await response.json();
 
             if (data.result === "success") {
                 const rate = data.rates[toCurrency];
-                const convertedAmount = (amount * rate).toFixed(2);
-                result.innerHTML = `${amount} ${fromCurrency} = ${convertedAmount} ${toCurrency}`;
-                convertBtn.style.display = 'none'; // Hide convert button after conversion
+                if (rate) {
+                    const convertedAmount = (amount * rate).toFixed(2);
+                    result.innerHTML = `${amount} ${fromCurrency} = ${convertedAmount} ${toCurrency}`;
+                    convertBtn.style.display = 'none'; // Hide convert button after conversion
+                } else {
+                    result.innerText = "Error: Invalid currency selected.";
+                }
             } else {
                 result.innerText = "Error: Unable to fetch exchange rates.";
             }
