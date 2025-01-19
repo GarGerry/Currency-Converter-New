@@ -1,58 +1,73 @@
+const amountInput = document.getElementById('amount');
+const fromCurrency = document.getElementById('from-currency');  // Sesuaikan ID dengan elemen asli
+const toCurrency = document.getElementById('to-currency');    // Sesuaikan ID dengan elemen asli
+const swapButton = document.getElementById('swap-btn');       // Sesuaikan ID dengan elemen asli
+const convertButton = document.getElementById('convert-btn'); // Sesuaikan ID dengan elemen asli
+const resultDiv = document.getElementById('result');
+
+// Status konversi otomatis
+let autoConvert = false;
+
+// Tombol convert pertama kali
+convertButton.addEventListener('click', async () => {
+  autoConvert = true; // Aktifkan konversi otomatis
+  await convertCurrency();
+  convertButton.style.display = 'none'; // Sembunyikan tombol setelah konversi
+});
+
+// Swap mata uang
+swapButton.addEventListener('click', async () => {
+  const temp = fromCurrency.value;
+  fromCurrency.value = toCurrency.value;
+  toCurrency.value = temp;
+
+  // Reset hasil dan konversi ulang setelah swap
+  resultDiv.innerHTML = '';
+  await convertCurrency();
+});
+
+// Input perubahan jumlah
+amountInput.addEventListener('input', async () => {
+  if (autoConvert) {
+    await convertCurrency(); // Konversi otomatis saat input berubah
+  }
+});
+
+// Perubahan mata uang
+[fromCurrency, toCurrency].forEach(element => {
+  element.addEventListener('change', () => {
+    autoConvert = false;  // Reset status jika mata uang diubah
+    convertButton.style.display = 'block'; // Tampilkan tombol Convert
+    resultDiv.innerHTML = ''; // Kosongkan hasil
+  });
+});
+
+// Fungsi konversi
 async function convertCurrency() {
-    const amount = document.getElementById('amount').value;
-    const fromCurrency = document.getElementById('from-currency').value;
-    const toCurrency = document.getElementById('to-currency').value;
-    const result = document.getElementById('result');
-    const convertBtn = document.getElementById('convert-btn');
+  const amount = amountInput.value;
+  const from = fromCurrency.value;
+  const to = toCurrency.value;
 
-    if (amount && fromCurrency && toCurrency && !isNaN(amount)) { // Validate if amount is a number
-        try {
-            const response = await fetch(`https://v6.exchangerate-api.com/v6/3ebe2ccf9eeea2aaef280201/latest/${fromCurrency}`);
-            const data = await response.json();
+  if (!amount || amount <= 0) {
+    resultDiv.innerHTML = 'Please enter a valid amount.';
+    return;
+  }
 
-            if (data.result === "success") {
-                const rate = data.rates[toCurrency];
-                const convertedAmount = (amount * rate).toFixed(2);
-                result.innerHTML = `${amount} ${fromCurrency} = ${convertedAmount} ${toCurrency}`;
-                convertBtn.style.display = 'none'; // Hide convert button after conversion
-            } else {
-                result.innerText = "Error: Unable to fetch exchange rates.";
-            }
-        } catch (error) {
-            result.innerText = "Error fetching exchange rates! Please try again later.";
-        }
+  try {
+    const apiKey = '3ebe2ccf9eeea2aaef280201';
+    const url = `https://v6.exchangerate-api.com/v6/${apiKey}/latest/${from}`;
+    const response = await fetch(url);
+    const data = await response.json();
+
+    if (data.result === 'success') {
+      const rate = data.conversion_rates[to];
+      const convertedAmount = (amount * rate).toFixed(2);
+      resultDiv.innerHTML = `${amount} ${from} = ${convertedAmount} ${to}`;
     } else {
-        result.innerHTML = ''; // Clear result if input is incomplete or invalid
-        convertBtn.style.display = 'block'; // Ensure the convert button is visible
+      resultDiv.innerHTML = `Error: ${data['error-type']}`;
     }
+  } catch (error) {
+    resultDiv.innerHTML = 'Error fetching conversion rate. Please try again later.';
+    console.error(error);
+  }
 }
-
-function swapCurrencies() {
-    const fromCurrency = document.getElementById('from-currency');
-    const toCurrency = document.getElementById('to-currency');
-
-    console.log("Swapping currencies...");
-    console.log(`From: ${fromCurrency.value}, To: ${toCurrency.value}`);
-
-    const temp = fromCurrency.value;
-    fromCurrency.value = toCurrency.value;
-    toCurrency.value = temp;
-
-    // Reset result and show button again after swapping
-    document.getElementById('result').innerHTML = '';
-    document.getElementById('convert-btn').style.display = 'block'; 
-
-    // Automatically convert after swap
-    convertCurrency();
-}
-
-document.getElementById('amount').addEventListener('input', convertCurrency);
-document.getElementById('from-currency').addEventListener('change', () => {
-    document.getElementById('convert-btn').style.display = 'block'; // Ensure button shows again
-    document.getElementById('result').innerHTML = ''; // Clear result
-});
-
-document.getElementById('to-currency').addEventListener('change', () => {
-    document.getElementById('convert-btn').style.display = 'block'; // Ensure button shows again
-    document.getElementById('result').innerHTML = ''; // Clear result
-});
