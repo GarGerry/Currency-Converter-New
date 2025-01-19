@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Currency Converter</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <header>
+        <nav class="navbar">
+            <div class="logo">
+                <a href="index.html">
+                    <img src="assets/images/1737221379019.png" alt="Logo" />
+                </a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Headline -->
+    <section class="headline">
+        <h1>Currency Converter</h1>
+        <p>Convert your money between different currencies easily.</p>
+    </section>
+
+    <!-- Content Section -->
+    <section class="content">
+        <div class="converter-container">
+            <!-- Amount Input -->
+            <div class="currency-box">
+                <label for="amount">Amount:</label>
+                <input type="number" id="amount" placeholder="Enter amount" min="0">
+            </div>
+
+            <!-- Currency Selection -->
+            <div class="currency-select">
+                <!-- From Currency -->
+                <div class="currency-group">
+                    <label for="from-currency">From:</label>
+                    <select id="from-currency">
+                        <option value="USD">🇺🇸 USD</option>
+                        <option value="EUR">🇪🇺 EUR</option>
+                        <!-- Add other currencies here -->
+                    </select>
+                </div>
+
+                <!-- Swap Button -->
+                <button id="swap-btn" onclick="swapCurrencies()">⇅</button>
+
+                <!-- To Currency -->
+                <div class="currency-group">
+                    <label for="to-currency">To:</label>
+                    <select id="to-currency">
+                        <option value="EUR">🇪🇺 EUR</option>
+                        <option value="USD">🇺🇸 USD</option>
+                        <!-- Add other currencies here -->
+                    </select>
+                </div>
+            </div>
+
+            <!-- Convert Button -->
+            <button id="convert-btn" onclick="convertCurrency()">Convert</button>
+            <p id="result"></p>
+        </div>
+    </section>
+
+    <!-- How to Use Section -->
+    <section class="how-to-use">
+        <h2>How to Use</h2>
+        <div class="steps">
+            <div class="step">
+                <h3>1. Enter the Amount</h3>
+                <p>Simply type in the amount you want to convert in the input box.</p>
+            </div>
+            <div class="step">
+                <h3>2. Select Your Currencies</h3>
+                <p>Click the dropdown menu to select the currency you want to convert from and to.</p>
+            </div>
+            <div class="step">
+                <h3>3. That's It</h3>
+                <p>Our currency converter will show the exchange rate and calculate the result for you.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <p><a href="#about">About</a></p>
+            <p>Social Media: <a href="#">Facebook</a> | <a href="#">Instagram</a> | <a href="#">Twitter</a></p>
+            <p>© Copyright 2025 Jtoosan.
+                All Rights Reserved
+            </p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
