@@ -8,9 +8,11 @@ async function convertCurrency() {
     // Mengecek apakah input amount valid
     if (isNaN(amount) || amount <= 0) {
         result.innerText = "Please enter a valid amount.";
-        convertBtn.style.display = 'block';
         return; // Menghentikan proses jika input jumlah tidak valid
     }
+
+    // Menyembunyikan tombol Convert jika amount sudah diinput
+    convertBtn.style.display = 'none';
 
     if (fromCurrency && toCurrency) {
         try {
@@ -30,7 +32,6 @@ async function convertCurrency() {
                 if (rate) {
                     const convertedAmount = (amount * rate).toFixed(2);
                     result.innerHTML = `${amount} ${fromCurrency} = ${convertedAmount} ${toCurrency}`;
-                    convertBtn.style.display = 'none'; // Hide convert button after conversion
                 } else {
                     result.innerText = "Error: Invalid currency selected.";
                 }
@@ -41,34 +42,38 @@ async function convertCurrency() {
             console.error(error);
             result.innerText = "Error fetching exchange rates!";
         }
-    } else {
-        result.innerHTML = ''; // Clear result if input is incomplete
-        convertBtn.style.display = 'block'; // Ensure the convert button is visible
     }
 }
 
 function swapCurrencies() {
     const fromCurrency = document.getElementById('from-currency');
     const toCurrency = document.getElementById('to-currency');
-
+    
     // Swap currency values
     const temp = fromCurrency.value;
     fromCurrency.value = toCurrency.value;
     toCurrency.value = temp;
 
-    // Automatically convert after swap
+    // Langsung konversi setelah swap tanpa tombol Convert
     convertCurrency();
 }
 
 // Event listeners for input and currency change
-document.getElementById('amount').addEventListener('input', convertCurrency);
+document.getElementById('amount').addEventListener('input', () => {
+    convertCurrency(); // Konversi otomatis langsung saat amount diubah
+});
 
 document.getElementById('from-currency').addEventListener('change', () => {
-    document.getElementById('convert-btn').style.display = 'block'; // Ensure button shows again
-    document.getElementById('result').innerHTML = ''; // Clear result
+    document.getElementById('convert-btn').style.display = 'block'; // Tombol Convert muncul
+    document.getElementById('result').innerHTML = ''; // Kosongkan hasil konversi
 });
 
 document.getElementById('to-currency').addEventListener('change', () => {
-    document.getElementById('convert-btn').style.display = 'block'; // Ensure button shows again
-    document.getElementById('result').innerHTML = ''; // Clear result
+    document.getElementById('convert-btn').style.display = 'block'; // Tombol Convert muncul
+    document.getElementById('result').innerHTML = ''; // Kosongkan hasil konversi
+});
+
+// Tombol Convert ditekan untuk pertama kali
+document.getElementById('convert-btn').addEventListener('click', () => {
+    convertCurrency();
 });
