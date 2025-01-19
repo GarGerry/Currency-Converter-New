@@ -60,6 +60,8 @@ function swapCurrencies() {
 
 // Event listeners for input and currency change
 document.getElementById('amount').addEventListener('input', () => {
+    const convertBtn = document.getElementById('convert-btn');
+    convertBtn.style.display = 'none'; // Sembunyikan tombol Convert jika amount diinput
     convertCurrency(); // Konversi otomatis langsung saat amount diubah
 });
 
